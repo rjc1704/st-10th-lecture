@@ -1,24 +1,33 @@
 import { useSelector } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Login from "../pages/Login";
 import Main from "../pages/Main";
 
-const PublicRoute = ({ element }) => {
+const PublicRoute = () => {
   const isLogin = useSelector((state) => state.auth.isLogin);
-  return isLogin ? <Navigate to="/" /> : element;
+  return <>{isLogin ? <Navigate to="/" /> : <Outlet />}</>;
 };
-
-const PrivateRoute = ({ element }) => {
+const PrivateRoute = () => {
   const isLogin = useSelector((state) => state.auth.isLogin);
-  return isLogin ? element : <Navigate to="/login" />;
+  return <>{isLogin ? <Outlet /> : <Navigate to="/login" />}</>;
 };
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<PublicRoute element={<Login />} />} />
-        <Route path="/" element={<PrivateRoute element={<Main />} />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route element={<PrivateRoute />}>
+          <Route path="/" element={<Main />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
