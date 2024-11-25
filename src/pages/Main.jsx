@@ -12,7 +12,9 @@ export default function Main() {
 
   useEffect(() => {
     const getTodos = async () => {
-      const { data } = await axios.get(`http://localhost:5055/todos`);
+      const { data } = await axios.get(
+        `http://localhost:5055/todos?_sort=-createdAt`,
+      );
       dispatch(setTodos(data));
     };
     getTodos();

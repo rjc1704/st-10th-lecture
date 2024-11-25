@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createTodo } from "../redux/slices/todoSlice.js";
+import { setTodos } from "../redux/slices/todoSlice.js";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
@@ -22,8 +22,11 @@ export default function TodoForm() {
       isDone: false,
       createdAt: Date.now(),
     };
-    const { data } = await axios.post(`http://localhost:5055/todos`, newTodo);
-    dispatch(createTodo(newTodo));
+    await axios.post(`http://localhost:5055/todos`, newTodo);
+    const { data: todos } = await axios.get(
+      `http://localhost:5055/todos?_sort=-createdAt`,
+    );
+    dispatch(setTodos(todos));
   };
 
   return (
